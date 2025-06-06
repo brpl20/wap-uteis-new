@@ -1,15 +1,13 @@
 // src/models/GroupSettings.js
+// user settings are for the user configs
+// for example blocking an user 
 const mongoose = require("mongoose");
 
-const GroupSettingsSchema = new mongoose.Schema({
-  groupId: {
+const userSettingsSchema = new mongoose.Schema({
+  userId: {
     type: String,
     required: true,
     unique: true,
-  },
-  description: {
-    type: String,
-    default: null,
   },
   isBlocked: {
     type: Boolean,
@@ -26,4 +24,4 @@ const GroupSettingsSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("GroupSettings", GroupSettingsSchema);
+module.exports = mongoose.model("UserSettings", userSettingsSchema);

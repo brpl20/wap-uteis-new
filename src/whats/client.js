@@ -2,16 +2,31 @@
 
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
+const path = require("path");
+const fs = require("fs");
 
 async function initializeWhatsAppClient() {
+
+  // const client = new Client({
+  //   authStrategy: new LocalAuth({
+  //     clientId: "whatsapp-bot", // Add a unique client ID
+  //     dataPath: "/home/brpl/code/br"
+  //   }),
+  //   puppeteer: {
+  //     args: ["--no-sandbox"],
+  //   },
+  // });
+
+  // Make sure you're using LocalAuth
   const client = new Client({
-    authStrategy: new LocalAuth(),
-    puppeteer: {
-      args: ["--no-sandbox"],
-    },
+      authStrategy: new LocalAuth({
+          clientId: "my-app-123", // Optional but recommended
+          dataPath: "./sessions" // This will create the auth folder here
+      })
   });
 
   client.on("qr", (qr) => {
+    console.log("Scan this QR code:");
     qrcode.generate(qr, { small: true });
   });
 
@@ -27,7 +42,7 @@ async function initializeWhatsAppClient() {
     console.error("WhatsApp authentication failed:", msg);
   });
 
-  await client.initialize();
+  client.initialize();
   return client;
 }
 

@@ -1,6 +1,8 @@
-// src/uteis/hardBlocGroup.js
+// src/botOnMessage/blockers/hardBlockGroup.js
+const GroupSettings = require('../../models/GroupSettings'); // Import GroupSettings for database interaction
+
 // This function will exit from a group
-// This will be used only once 
+// This will be used only once
 // Exit Group
 async function hardBlockGroup(client, groupId) {
   try {
@@ -9,7 +11,7 @@ async function hardBlockGroup(client, groupId) {
 
     await GroupSettings.findOneAndUpdate(
       { groupId },
-      { isBlocked: true, updatedAt: new Date() },
+      { isBlocked: true, blockType: 'hard', updatedAt: new Date() }, // Set blockType to 'hard'
       { upsert: true },
     );
 
@@ -20,6 +22,7 @@ async function hardBlockGroup(client, groupId) {
   }
 }
 
-export default {
+// Changed to CommonJS export for consistency
+module.exports = {
   hardBlockGroup
 };
