@@ -56,18 +56,20 @@ async function botListenerOnMessageCreate(client, message, blockedEntities) {
                 }
                 break;
 
-            case 'status!': // Health check command
-                console.log(`[OWNER COMMAND] Checking bot status.`);
+            case 'health!': // <--- ALTERADO DE 'STATUS!' PARA 'HEALTH!'
+                console.log(`[OWNER COMMAND] Checking bot health status.`);
                 let botState = await client.getState();
-                let statusMessage = `*Status do Bot:*\nEstado: \`${botState || 'DESCONHECIDO'}\``;
+                
+                // Resposta no chat
+                let replyMessage = '';
+                if (botState === 'CONNECTED') {
+                    replyMessage = '✅ *Status do Bot: OK*\n_Conectado ao WhatsApp Web._';
+                } else {
+                    replyMessage = `⚠️ *Status do Bot: ATENÇÃO*\nEstado atual: \`${botState || 'DESCONHECIDO'}\`\n_Pode haver um problema na conexão._`;
+                }
 
-                // Opcional: Adicionar mais informações de saúde aqui
-                // Ex: verificar conexão com o banco de dados (se você tiver uma função para isso)
-                // const isDbConnected = mongoose.connection.readyState === 1;
-                // statusMessage += `\nBanco de Dados: ${isDbConnected ? 'Conectado' : 'Desconectado'}`;
-
-                await message.reply(statusMessage);
-                console.log(`[OWNER COMMAND] Bot status replied: ${botState}`);
+                await message.reply(replyMessage);
+                console.log(`[OWNER COMMAND] Bot health status replied: ${botState}`);
                 break;
 
             default:
@@ -77,7 +79,7 @@ async function botListenerOnMessageCreate(client, message, blockedEntities) {
         }
     } catch (error) {
         console.error(`[OWNER COMMAND] Error processing command '${messageBody}':`, error);
-        await message.reply(`Error processing your command: ${error.message}`);
+        await message.reply(`Erro ao processar seu comando: ${error.message}`);
     }
 }
 

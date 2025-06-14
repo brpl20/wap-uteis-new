@@ -11,9 +11,20 @@ Configure seu bot de Telegram com o botfather e o seu qr code será enviado para
 Temos basicamente dois bots, um escutando as suas mensagens criadas e outro escutando as mensagens recebidas. O primeiro é o `botOnMessageCreate` e o segundo é o `botOnMessage`. 
 
 # Arquivador Soft e Hard
+* sb! => soft block
+* hb! => hard block
+
 No `botOnMessageCreate` ele poderá arquivar de modo `soft` neste modo você simplesmente arquiva os chats, como por exemplo aquele grupo chato mas do qual você não pode sair, ou daquele contato que manda SPAM mas você não pode bloquear.
 
 No modo hard ele irá sair do grupo ou realmente bloquear a pessoa, portanto cuidado.
+
+# Transcrevedor
+Transcreve a mensagem depois de 3 minutos idle, uma vez que muito provavelmente você estará em reunião ou algo do tipo. 
+
+# Health Checker
+* health! 
+
+Retorna a saúde do whatsapp web no mesmo chat que foi invocado
 
 # Discos
 A ser implementado. 
@@ -21,8 +32,6 @@ A ser implementado.
 # Vault
 A ser implementado.
 
-# Transcrevedor
-A ser implementado. Transcreve a mensagem depois de 3 minutos idle, uma vez que muito provavelmente você estará em reunião ou algo do tipo. 
 
 # Lembrete em...
 A ser implementado. Cria um lembrete que aparecerá no chat depois de X dias. 
