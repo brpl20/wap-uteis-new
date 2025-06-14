@@ -3,8 +3,6 @@
 
 const { hardBlockUser } = require("../botOnMessage/blockers/hardBlockUser");
 const { hardBlockGroup } = require("../botOnMessage/blockers/hardBlockGroup");
-const { softBlockUser } = require("../botOnMessage/blockers/softBlockUser"); // Note: softBlockUser/Group are generally for incoming, but kept for completeness if needed differently
-const { softBlockGroup } = require("../botOnMessage/blockers/softBlockGroup");
 const GroupSettings = require("../models/GroupSettings"); // To update database for soft block
 const UserSettings = require("../models/UserSettings"); // To update database for soft block
 
@@ -30,9 +28,11 @@ async function botListenerOnMessageCreate(client, message, blockedEntities) {
                 if (isGroup) {
                     console.log(`[OWNER COMMAND] Soft blocking group: ${targetId}`);
                     await handleSoftBlockGroupCommand(client, targetId, blockedEntities.groups);
+                    await message.reply('Grupo soft-bloqueado (arquivado).');
                 } else {
                     console.log(`[OWNER COMMAND] Soft blocking contact: ${targetId}`);
                     await handleSoftBlockUserCommand(client, targetId, blockedEntities.users);
+                    await message.reply('Contato soft-bloqueado (arquivado).');
                 }
                 break;
 
@@ -40,7 +40,7 @@ async function botListenerOnMessageCreate(client, message, blockedEntities) {
                 if (isGroup) {
                     console.log(`[OWNER COMMAND] Hard blocking group (leaving): ${targetId}`);
                     await hardBlockGroup(client, targetId);
-                    await message.reply('Group hard-blocked (left the group).');
+                    await message.reply('Grupo hard-bloqueado (saí do grupo).');
                     // After leaving, remove from the blockedEntities map if it was there
                     if (blockedEntities.groups.has(targetId)) {
                         blockedEntities.groups.delete(targetId);
@@ -48,12 +48,26 @@ async function botListenerOnMessageCreate(client, message, blockedEntities) {
                 } else {
                     console.log(`[OWNER COMMAND] Hard blocking contact: ${targetId}`);
                     await hardBlockUser(client, targetId);
-                    await message.reply('Contact hard-blocked.');
+                    await message.reply('Contato hard-bloqueado.');
                     // After blocking, remove from the blockedEntities map if it was there
                     if (blockedEntities.users.has(targetId)) {
                         blockedEntities.users.delete(targetId);
                     }
                 }
+                break;
+
+            case 'status!': // Health check command
+                console.log(`[OWNER COMMAND] Checking bot status.`);
+                let botState = await client.getState();
+                let statusMessage = `*Status do Bot:*\nEstado: \`${botState || 'DESCONHECIDO'}\``;
+
+                // Opcional: Adicionar mais informações de saúde aqui
+                // Ex: verificar conexão com o banco de dados (se você tiver uma função para isso)
+                // const isDbConnected = mongoose.connection.readyState === 1;
+                // statusMessage += `\nBanco de Dados: ${isDbConnected ? 'Conectado' : 'Desconectado'}`;
+
+                await message.reply(statusMessage);
+                console.log(`[OWNER COMMAND] Bot status replied: ${botState}`);
                 break;
 
             default:
